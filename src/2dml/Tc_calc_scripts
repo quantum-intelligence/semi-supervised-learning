@@ -1,0 +1,56 @@
+# Tc calc codes
+# Moved to appropriate section of jupyter notebook
+
+# df.columns
+# df_optima_mag_tot = get_df_optima(df_master_mag_tot)
+
+df_optima_mag_tot[df_optima_mag_tot['formula']=='Cr2Ge2Te6']
+
+df_optima_mag_tot[df_optima_mag_tot['optMag'] > 5.400]
+
+fm_afm_so_Matrix_Te_T = calc_Tc(fm_afm_so_Matrix_Te)
+plt.figure(figsize=(6,6))
+title = '$T_c$  [FM_so - AFM_so] ABTe$_6$ \n'
+cmaplabel = 'hot' #'BlueRed3' #'inferno'
+vmin = -1.1; vmax=0.4;
+energyplot(fm_afm_so_Matrix_Te_T, title, cmaplabel,vmin,vmax,range=False)
+
+
+# plt.hist(fm_afm_so_Matrix_Te)
+df_optima_mag_Tc = df_optima_mag_tot.copy()
+Tc_values = df_optima_mag_Tc['delta_FM_AFM'].values
+Tc_values = calc_Tc_scalar(Tc_values)
+df_optima_mag_Tc['Tc'] = Tc_values
+
+df_optima_mag_Tc[(df_optima_mag_Tc['Tc'] > 38) & (df_optima_mag_Tc['optMag'] > 5.40)]
+
+plt.figure(figsize=(6,6))
+title = '$\Delta$ Energy [FM_so - AFM_so] ABSe$_6$ \n'
+cmaplabel = 'BlueRed3' #'inferno'
+vmin = -1.1; vmax=0.40;
+energyplot(fm_afm_so_Matrix_Se, title, cmaplabel,vmin,vmax,range=True)
+# plt.colorbar()
+
+
+fm_afm_so_Matrix_Se_T = calc_Tc(fm_afm_so_Matrix_Se)
+plt.figure(figsize=(6,6))
+title = '$T_c$ [FM_so - AFM_so] ABSe$_6$ \n'
+cmaplabel = 'hot' #'inferno'
+vmin = -1.1; vmax=0.40;
+energyplot(fm_afm_so_Matrix_Se_T, title, cmaplabel,vmin,vmax,range=False)
+# plt.colorbar()
+
+plt.figure(figsize=(6,6))
+title = '$\Delta$ Energy [FM_so - AFM_so] ABS$_6$ \n'
+cmaplabel = 'BlueRed3' #'inferno'
+vmin = -1.1; vmax=0.4;
+energyplot(fm_afm_so_Matrix_S, title, cmaplabel,vmin,vmax,range=True)
+# plt.colorbar()
+
+fm_afm_so_Matrix_S_T = calc_Tc(fm_afm_so_Matrix_S)
+plt.figure(figsize=(6,6))
+title = '$T_c$ [FM_so - AFM_so] ABS$_6$ \n'
+cmaplabel = 'hot' #'inferno'
+vmin = -1.1; vmax=0.4;
+energyplot(fm_afm_so_Matrix_S_T, title, cmaplabel,vmin,vmax,range=False)
+# plt.colorbar()

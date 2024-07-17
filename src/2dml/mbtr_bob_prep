@@ -1,0 +1,97 @@
+# # def get_master_set_multi(molecule_list, on_the_fly, df_smiles, NUM_flavors):
+# #     """
+# #         Defined in mbtr.py
+# #         Create a set of MasterMatrices from the data
+# #         updates: update to only accept CIDS numbers...
+# #         - update to include ABX3 type
+# #     """
+# #     master_list = get_masterlist(molecule_list, on_the_fly, df_smiles, NUM_flavors)
+# #     master_matrix_set = []
+# #     master_matrix_flavors = []
+# #     atom_bag_list = []
+# #     for molname in molecule_list:
+# #         #print('molname',np.int(molname))
+# #         MolMatrix, atom_bag = mol_matrix_multi(molname, on_the_fly, df_smiles, NUM_flavors)
+# #         bondtypes, bag_set, bond_counts = make_bag_multi(MolMatrix)
+# #         #print(atom_bag)
+# #         atom_bag_list.append(atom_bag)
+# #         ###print bondtypes, bag, bond_counts, '\n'
+# #         master_matrix = getMasterMatrix_multi(bag_set, bond_counts, master_list, bondtypes,NUM_flavors)
+# #         master_matrix_set.append(master_matrix)
+# #     return master_matrix_set, atom_bag_list
+
+
+# # def get_masterlist(molecule_list, on_the_fly, df_smiles, NUM_flavors):
+# #     """
+# #         generates a master list of bondtypes (list of unique items) from the dataset
+# #         - modify to work with ABX3 compounds
+# #     """
+# #     bondtypes_list = []
+# #     #bag_list = []
+# #     # Defune molecule & adjacency matrix
+# #     for molecule_name in molecule_list:
+# #         #molecule_name = molname
+# #         #print 'molecule_name', molecule_name
+# #         MolMatrix, atom_bag = mol_matrix_multi(molecule_name, on_the_fly, df_smiles, NUM_flavors)
+# #         bondtypes, bag, bond_counts = make_bag_multi(MolMatrix)
+# #         bondtypes_list.append(bondtypes)
+# #     #bag_list.append(bag)
+# #     # Need to be able to compare different molecules. Pad with zeros.
+# #     # Hard code the number of zeros? or be ableto do this on the fly
+
+# #     # Create MAster list of bonds:
+# #     # from set of bond types loop through each one and collect master list
+# #     combined_list = []
+# #     for s in bondtypes_list:
+# #         s = list(s)
+# #         combined_list.append(s)
+# #     reduced_list = functools.reduce(operator.concat, combined_list)
+# #     master_list = np.unique(reduced_list)
+# #     #print 'master list', master_list
+# #     return master_list
+
+
+
+# def get_BoBvectors_multi(df2,species,on_the_fly,df_smiles,NUM_flavors):
+#     """
+#         Get bob_vectors
+#         INPUT : 'Reactant X CID'. Converts CID to names using cid_to_name()
+#         - updated for ABX3 structures
+#     """
+#     molecule_list = df2[species]
+#     print('species',species)
+#     master_matrix_set, atom_bag_list = get_master_set_multi(molecule_list, on_the_fly, df_smiles, NUM_flavors)
+#     # CREATE BoB vectors from Master Matrices...
+#     set_size = len(master_matrix_set)
+#     vec_length = master_matrix_set[0].shape[1]*master_matrix_set[0].shape[2]
+#     Bob_vector = np.zeros((vec_length, set_size), dtype = np.float)
+#     Bob_vector_flavors = np.empty((NUM_flavors,vec_length, set_size), dtype = np.float)
+#     for fth in np.arange(NUM_flavors):
+#         for mth, mat_item in enumerate(master_matrix_set):
+#             vec_item = np.reshape(mat_item[fth,:,:], (1,-1), order = 'F')
+#             Bob_vector[:, mth] = vec_item
+#         Bob_vector_flavors[fth,:,:] = Bob_vector
+#     return Bob_vector_flavors, atom_bag_list
+
+
+# def get_bob_multi(df2, sigma, on_the_fly, p, df_smiles, NUM_flavors):
+#     """
+#         UPDATE DF WITH BOB FEATURE VECTORS
+#         NOTE:
+#         - First index is rth reactant/prodcut.. inner list index is flavor
+#         - in rth_bob_space
+#     """
+#     #reaction_list = ['Reactant 1 CID','Reactant 2 CID','Reactant 3 CID','Major Product CID']
+#     formula = 'formula'
+#     df_bob_list = [['cs_bob'],
+#                    ['cs_PE'],
+#                    ['cs_IR'],
+#                    ['cs_AR'],
+#                    ['cs_OX']]
+#     #rth_bob_space = []
+#     #atoms_reaction_list = []
+#     Bob_vector_flavors, atoms_list = get_BoBvectors_multi(df2, formula, on_the_fly, df_smiles, NUM_flavors)
+#     features_flavors = get_Bobfeatures_multi(Bob_vector_flavors, sigma, p)
+#     #atoms_reaction_list.append(atoms_list)
+#     #rth_bob_space.append(features_flavors)
+#     return df_bob_list, features_flavors, atoms_list
